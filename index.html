@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="FJ Speed — jeu de vitesse, de frappe et de visée inspiré de Tap Touch et Aim Lab. 100% hors-ligne, HTML/CSS/JS vanilla.">
+  <title>FJ Speed — Tap &amp; Aim Trainer</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-skin="neon" data-map="city">
+
+  <!-- Décor (map) + particules + flash d'écran -->
+  <div id="map-layer" aria-hidden="true"></div>
+  <canvas id="fx-canvas" aria-hidden="true"></canvas>
+  <div id="flash" aria-hidden="true"></div>
+
+  <main id="app">
+
+    <!-- ================= MENU PRINCIPAL ================= -->
+    <section id="screen-menu" class="screen active">
+      <div class="panel menu-panel glass">
+        <h1 id="title">FJ&nbsp;SPEED</h1>
+        <p class="subtitle" data-i18n="subtitle"></p>
+        <nav class="menu">
+          <button class="btn btn-primary" data-nav="play"><span class="btn-ico">▶</span><span data-i18n="play"></span></button>
+          <button class="btn" data-nav="modes"><span class="btn-ico">🎮</span><span data-i18n="modes"></span></button>
+          <button class="btn" data-nav="difficulty"><span class="btn-ico">🔥</span><span data-i18n="difficulty"></span></button>
+          <button class="btn" data-nav="skins"><span class="btn-ico">🎨</span><span data-i18n="skins"></span></button>
+          <button class="btn" data-nav="maps"><span class="btn-ico">🗺️</span><span data-i18n="maps"></span></button>
+          <button class="btn" data-nav="stats"><span class="btn-ico">📊</span><span data-i18n="stats"></span></button>
+          <button class="btn" data-nav="settings"><span class="btn-ico">⚙️</span><span data-i18n="settings"></span></button>
+        </nav>
+        <div id="menu-chips"></div>
+      </div>
+    </section>
+
+    <!-- ================= MODES ================= -->
+    <section id="screen-modes" class="screen">
+      <div class="panel glass">
+        <header class="panel-head">
+          <button class="btn btn-back" data-nav="menu" aria-label="Retour">←</button>
+          <h2 data-i18n="modes"></h2>
+        </header>
+        <div id="modes-list" class="cards cards-3"></div>
+        <div id="wordlang-row">
+          <span class="row-label" data-i18n="word_lang"></span>
+          <div id="wordlang-chips" class="chips"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= DIFFICULTÉ ================= -->
+    <section id="screen-difficulty" class="screen">
+      <div class="panel glass">
+        <header class="panel-head">
+          <button class="btn btn-back" data-nav="menu" aria-label="Retour">←</button>
+          <h2 data-i18n="difficulty"></h2>
+        </header>
+        <div id="diff-list" class="cards cards-3"></div>
+      </div>
+    </section>
+
+    <!-- ================= SKINS ================= -->
+    <section id="screen-skins" class="screen">
+      <div class="panel glass">
+        <header class="panel-head">
+          <button class="btn btn-back" data-nav="menu" aria-label="Retour">←</button>
+          <h2 data-i18n="skins"></h2>
+        </header>
+        <div id="skins-list" class="cards cards-4"></div>
+      </div>
+    </section>
+
+    <!-- ================= MAPS ================= -->
+    <section id="screen-maps" class="screen">
+      <div class="panel glass">
+        <header class="panel-head">
+          <button class="btn btn-back" data-nav="menu" aria-label="Retour">←</button>
+          <h2 data-i18n="maps"></h2>
+        </header>
+        <div id="maps-list" class="cards cards-4"></div>
+      </div>
+    </section>
+
+    <!-- ================= STATISTIQUES ================= -->
+    <section id="screen-stats" class="screen">
+      <div class="panel glass">
+        <header class="panel-head">
+          <button class="btn btn-back" data-nav="menu" aria-label="Retour">←</button>
+          <h2 data-i18n="stats"></h2>
+        </header>
+        <div id="stats-tiles" class="stats-grid"></div>
+        <h3 class="sub-head" data-i18n="st_records"></h3>
+        <div class="table-wrap"><table id="records-table"></table></div>
+        <button class="btn btn-danger" id="btn-reset-stats" data-i18n="st_reset"></button>
+      </div>
+    </section>
+
+    <!-- ================= PARAMÈTRES ================= -->
+    <section id="screen-settings" class="screen">
+      <div class="panel glass">
+        <header class="panel-head">
+          <button class="btn btn-back" data-nav="menu" aria-label="Retour">←</button>
+          <h2 data-i18n="settings"></h2>
+        </header>
+
+        <div class="set-row">
+          <label for="set-volume" data-i18n="set_volume"></label>
+          <div class="set-ctl">
+            <input type="range" id="set-volume" min="0" max="100" step="1">
+            <span id="volume-val" class="ctl-val">70%</span>
+          </div>
+        </div>
+
+        <div class="set-row">
+          <label for="set-lang" data-i18n="set_lang"></label>
+          <select id="set-lang">
+            <option value="fr">Français</option>
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="de">Deutsch</option>
+            <option value="ja">日本語</option>
+          </select>
+        </div>
+
+        <div class="set-row">
+          <span data-i18n="set_fs"></span>
+          <button class="switch" id="set-fs" role="switch" aria-checked="false"><span class="knob"></span></button>
+        </div>
+
+        <div class="set-row">
+          <span data-i18n="set_fx"></span>
+          <button class="switch" id="set-fx" role="switch" aria-checked="true"><span class="knob"></span></button>
+        </div>
+
+        <div class="set-row">
+          <span data-i18n="set_size"></span>
+          <div class="seg" id="set-size">
+            <button data-size="s" class="seg-s">A</button>
+            <button data-size="m" class="seg-m">A</button>
+            <button data-size="l" class="seg-l">A</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= JEU ================= -->
+    <section id="screen-game" class="screen">
+      <div id="game-wrap">
+
+        <!-- HUD : score, chrono, combo, vitesse, précision, record -->
+        <header id="hud" class="glass">
+          <div class="hud-box"><span class="hud-label" data-i18n="hud_score"></span><span class="hud-val" id="hud-score">0</span></div>
+          <div class="hud-box"><span class="hud-label" data-i18n="hud_time"></span><span class="hud-val" id="hud-time">0.0</span></div>
+          <div class="hud-box"><span class="hud-label" data-i18n="hud_combo"></span><span class="hud-val" id="hud-combo">0</span></div>
+          <div class="hud-box"><span class="hud-label" id="hud-speed-label"></span><span class="hud-val" id="hud-speed">0.0</span></div>
+          <div class="hud-box" id="hud-react-box"><span class="hud-label" data-i18n="hud_react"></span><span class="hud-val" id="hud-react">—</span></div>
+          <div class="hud-box"><span class="hud-label" data-i18n="hud_acc"></span><span class="hud-val" id="hud-acc">100%</span></div>
+          <div class="hud-box hud-record"><span class="hud-label" data-i18n="hud_record"></span><span class="hud-val" id="hud-record">0</span></div>
+          <button class="btn btn-back" id="btn-quit" aria-label="Quitter">✕</button>
+        </header>
+
+        <!-- Barre de progression -->
+        <div id="progress-wrap" class="glass">
+          <div id="progress-bar"></div>
+          <span id="progress-level">LVL 1</span>
+        </div>
+
+        <!-- Zone de jeu -->
+        <div id="game-area" class="glass">
+          <p id="game-hint"></p>
+
+          <!-- Mode F / J -->
+          <div id="fj-area" class="mode-area">
+            <div class="key" id="key-f" data-key="f"><span>F</span></div>
+            <div class="fj-arrow" id="fj-arrow">◀</div>
+            <div class="key" id="key-j" data-key="j"><span>J</span></div>
+          </div>
+
+          <!-- Mode Mots -->
+          <div id="words-area" class="mode-area">
+            <div id="word-kana"></div>
+            <div id="word-letters"></div>
+            <input id="word-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="saisie">
+          </div>
+
+          <!-- Mode Souris (Aim) -->
+          <div id="aim-area" class="mode-area"></div>
+
+          <!-- Popups (combo, level up) + compte à rebours -->
+          <div id="popup-layer" aria-hidden="true"></div>
+          <div id="countdown" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= RÉSULTATS ================= -->
+    <section id="screen-results" class="screen">
+      <div class="panel results-panel glass">
+        <h2 data-i18n="r_title"></h2>
+        <div id="new-record" class="hidden">🏆 <span data-i18n="r_new"></span></div>
+        <div id="results-grid"></div>
+        <div class="row-btns">
+          <button class="btn btn-primary" id="btn-replay" data-i18n="r_replay"></button>
+          <button class="btn" data-nav="menu" data-i18n="r_menu"></button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <noscript><p style="color:#fff;text-align:center;padding:2rem">Ce jeu nécessite JavaScript. / This game requires JavaScript.</p></noscript>
+  <script src="script.js"></script>
+</body>
+</html>
