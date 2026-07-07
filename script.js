@@ -37,11 +37,11 @@ const MODE_ICONS = { fj: "⌨️", words: "📝", aim: "🎯" };
    - words : time (s), len [min,max] (longueur des mots), mult, penalty
    - aim   : time (s), size (px départ), min (px mini), life (ms de vie), minLife, conc (cibles simultanées), mult */
 const DIFFS = {
-  facile:     { fj: { time: 30, goal: 30, mult: 1,   penalty: 0  }, words: { time: 60, len: [2, 5],  mult: 1,   penalty: 0  }, aim: { time: 30, size: 92, min: 60, life: 2200, minLife: 1300, conc: 1, mult: 1 } },
-  normal:     { fj: { time: 30, goal: 40, mult: 1.5, penalty: 0  }, words: { time: 60, len: [3, 7],  mult: 1.5, penalty: 0  }, aim: { time: 30, size: 76, min: 46, life: 1700, minLife: 950,  conc: 2, mult: 1.5 } },
-  difficile:  { fj: { time: 30, goal: 50, mult: 2,   penalty: 5  }, words: { time: 60, len: [5, 9],  mult: 2,   penalty: 5  }, aim: { time: 30, size: 62, min: 34, life: 1350, minLife: 750,  conc: 2, mult: 2 } },
-  extreme:    { fj: { time: 30, goal: 62, mult: 3,   penalty: 10 }, words: { time: 60, len: [6, 12], mult: 3,   penalty: 10 }, aim: { time: 30, size: 50, min: 26, life: 1050, minLife: 580,  conc: 3, mult: 3 } },
-  impossible: { fj: { time: 30, goal: 78, mult: 5,   penalty: 20 }, words: { time: 60, len: [8, 99], mult: 5,   penalty: 20 }, aim: { time: 30, size: 38, min: 18, life: 800,  minLife: 420,  conc: 3, mult: 5 } },
+  facile:     { fj: { time: 30, goal: 30, mult: 1,   penalty: 0  }, words: { time: 60, len: [2, 5],  mult: 1,   penalty: 0  }, aim: { time: 30, size: 130, min: 88, life: 2400, minLife: 1400, conc: 1, mult: 1 } },
+  normal:     { fj: { time: 30, goal: 40, mult: 1.5, penalty: 0  }, words: { time: 60, len: [3, 7],  mult: 1.5, penalty: 0  }, aim: { time: 30, size: 112, min: 70, life: 1850, minLife: 1050, conc: 2, mult: 1.5 } },
+  difficile:  { fj: { time: 30, goal: 50, mult: 2,   penalty: 5  }, words: { time: 60, len: [5, 9],  mult: 2,   penalty: 5  }, aim: { time: 30, size: 94,  min: 54, life: 1500, minLife: 820,  conc: 2, mult: 2 } },
+  extreme:    { fj: { time: 30, goal: 62, mult: 3,   penalty: 10 }, words: { time: 60, len: [6, 12], mult: 3,   penalty: 10 }, aim: { time: 30, size: 78,  min: 42, life: 1150, minLife: 640,  conc: 3, mult: 3 } },
+  impossible: { fj: { time: 30, goal: 78, mult: 5,   penalty: 20 }, words: { time: 60, len: [8, 99], mult: 5,   penalty: 20 }, aim: { time: 30, size: 60,  min: 30, life: 880,  minLife: 460,  conc: 3, mult: 5 } },
 };
 const DIFF_IDS = Object.keys(DIFFS);
 const DIFF_FLAMES = { facile: "🔥", normal: "🔥🔥", difficile: "🔥🔥🔥", extreme: "🔥🔥🔥🔥", impossible: "💀" };
@@ -1078,7 +1078,7 @@ const Aim = {
         Game.bad();
         this.spawn();
       } else {
-        tg.el.style.transform = `translate(-50%,-50%) scale(${0.35 + 0.65 * k})`;
+        tg.el.style.transform = `translate(-50%,-50%) scale(${0.5 + 0.5 * k})`;
       }
     }
   },
