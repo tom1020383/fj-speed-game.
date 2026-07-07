@@ -37,11 +37,11 @@ const MODE_ICONS = { fj: "⌨️", words: "📝", aim: "🎯" };
    - words : time (s), len [min,max] (longueur des mots), mult, penalty
    - aim   : time (s), size (px départ), min (px mini), life (ms de vie), minLife, conc (cibles simultanées), mult */
 const DIFFS = {
-  facile:     { fj: { time: 30, goal: 30, mult: 1,   penalty: 0  }, words: { time: 60, len: [2, 5],  mult: 1,   penalty: 0  }, aim: { time: 30, size: 92, min: 60, life: 2200, minLife: 1300, conc: 1, mult: 1 } },
-  normal:     { fj: { time: 30, goal: 40, mult: 1.5, penalty: 0  }, words: { time: 60, len: [3, 7],  mult: 1.5, penalty: 0  }, aim: { time: 30, size: 76, min: 46, life: 1700, minLife: 950,  conc: 2, mult: 1.5 } },
-  difficile:  { fj: { time: 30, goal: 50, mult: 2,   penalty: 5  }, words: { time: 60, len: [5, 9],  mult: 2,   penalty: 5  }, aim: { time: 30, size: 62, min: 34, life: 1350, minLife: 750,  conc: 2, mult: 2 } },
-  extreme:    { fj: { time: 30, goal: 62, mult: 3,   penalty: 10 }, words: { time: 60, len: [6, 12], mult: 3,   penalty: 10 }, aim: { time: 30, size: 50, min: 26, life: 1050, minLife: 580,  conc: 3, mult: 3 } },
-  impossible: { fj: { time: 30, goal: 78, mult: 5,   penalty: 20 }, words: { time: 60, len: [8, 99], mult: 5,   penalty: 20 }, aim: { time: 30, size: 38, min: 18, life: 800,  minLife: 420,  conc: 3, mult: 5 } },
+  facile:     { fj: { time: 30, goal: 30, mult: 1,   penalty: 0  }, words: { time: 60, len: [2, 5],  mult: 1,   penalty: 0  }, aim: { time: 30, size: 130, min: 88, life: 2400, minLife: 1400, conc: 1, mult: 1 } },
+  normal:     { fj: { time: 30, goal: 40, mult: 1.5, penalty: 0  }, words: { time: 60, len: [3, 7],  mult: 1.5, penalty: 0  }, aim: { time: 30, size: 112, min: 70, life: 1850, minLife: 1050, conc: 2, mult: 1.5 } },
+  difficile:  { fj: { time: 30, goal: 50, mult: 2,   penalty: 5  }, words: { time: 60, len: [5, 9],  mult: 2,   penalty: 5  }, aim: { time: 30, size: 94,  min: 54, life: 1500, minLife: 820,  conc: 2, mult: 2 } },
+  extreme:    { fj: { time: 30, goal: 62, mult: 3,   penalty: 10 }, words: { time: 60, len: [6, 12], mult: 3,   penalty: 10 }, aim: { time: 30, size: 78,  min: 42, life: 1150, minLife: 640,  conc: 3, mult: 3 } },
+  impossible: { fj: { time: 30, goal: 78, mult: 5,   penalty: 20 }, words: { time: 60, len: [8, 99], mult: 5,   penalty: 20 }, aim: { time: 30, size: 60,  min: 30, life: 880,  minLife: 460,  conc: 3, mult: 5 } },
 };
 const DIFF_IDS = Object.keys(DIFFS);
 const DIFF_FLAMES = { facile: "🔥", normal: "🔥🔥", difficile: "🔥🔥🔥", extreme: "🔥🔥🔥🔥", impossible: "💀" };
@@ -76,21 +76,69 @@ const AMBIENT = {
   space:   { n: 55, colors: ["#ffffff", "#a0c8ff", "#e0d0ff"], mode: "twinkle", size: [.8, 2.2], speed: [0, 0] },
 };
 
-/* Listes de mots par langue (le japonais fournit kana + romaji à taper) */
+/* Listes de mots par langue (~110-160 mots chacune, toutes longueurs ;
+   le japonais fournit kana + romaji à taper) */
 const WORDS = {
-  fr: ["clé", "jeu", "vite", "main", "roue", "flux", "souris", "clavier", "rapide", "vitesse", "fenêtre", "musique", "étoile", "montagne", "ordinateur", "développeur", "électrique", "papillon", "fantôme", "horizon", "lumière", "victoire", "énergie", "galaxie", "pixel", "score", "fusée", "dragon", "tempête", "précision", "champion", "mystère", "aventure", "turbo", "néon", "cristal", "tornade", "labyrinthe", "extraordinaire", "accélération"],
-  en: ["key", "run", "fast", "jump", "mouse", "speed", "quick", "light", "storm", "blaze", "planet", "rocket", "shadow", "combo", "score", "pixel", "turbo", "dragon", "energy", "galaxy", "mystery", "victory", "crystal", "phantom", "horizon", "thunder", "keyboard", "velocity", "champion", "lightning", "adventure", "particle", "impossible", "spectacular", "acceleration", "extraordinary"],
-  es: ["sol", "luz", "mar", "rojo", "mano", "ratón", "rápido", "teclado", "estrella", "montaña", "velocidad", "relámpago", "ordenador", "campeón", "misterio", "aventura", "imposible", "extraordinario", "galaxia", "dragón", "tormenta", "cristal", "fantasma", "horizonte", "victoria", "energía", "turbo", "neón", "píxel", "fuego", "viento", "trueno", "cometa", "aceleración"],
-  de: ["rot", "eis", "hand", "maus", "wind", "held", "stern", "blitz", "sturm", "sieg", "licht", "feuer", "planet", "rakete", "drache", "schnell", "donner", "energie", "meister", "kristall", "schatten", "tastatur", "abenteuer", "unglaublich", "blitzschnell", "geschwindigkeit", "meisterschaft", "herausforderung", "turbo", "neon", "pixel", "galaxie", "komet"],
+  fr: [
+    "or", "vie", "roi", "feu", "mer", "sel", "cri", "lac", "riz", "rue", "sac", "ski", "dos", "eau", "fil", "gel", "bec", "art", "ami", "bol",
+    "clé", "jeu", "vite", "main", "roue", "flux", "vent", "vert", "voix", "zone", "lune", "loup", "nuit", "pain", "parc", "pied", "pont", "port", "rêve", "tour",
+    "arbre", "avion", "chant", "chien", "corde", "danse", "école", "fleur", "météo", "froid", "glace", "herbe", "hiver", "image", "livre", "magie", "pluie", "score", "pixel", "sport",
+    "souris", "clavier", "rapide", "étoile", "éclair", "jardin", "jungle", "maison", "miroir", "moteur", "nuage", "océan", "oiseau", "ombre", "orage", "orange", "pierre", "plage", "plume", "pomme",
+    "musique", "fenêtre", "vitesse", "fantôme", "horizon", "lumière", "énergie", "galaxie", "fusée", "dragon", "tempête", "mystère", "cristal", "tornade", "trésor", "sourire", "rivière", "soleil", "voyage", "violon",
+    "montagne", "victoire", "papillon", "précision", "champion", "aventure", "ordinateur", "labyrinthe", "développeur", "électrique", "bibliothèque", "boulangerie", "brouillard", "chevalier", "chocolat", "citrouille", "dinosaure", "éléphant", "escalier", "grenouille",
+    "hélicoptère", "incroyable", "magnifique", "merveilleux", "parapluie", "professeur", "programmation", "technologie", "télécommande", "université", "extraordinaire", "accélération", "fantastique", "formidable", "invincible", "dictionnaire", "montgolfière", "cascade", "turbo", "néon",
+  ],
+  en: [
+    "ant", "arm", "bat", "bed", "bee", "box", "bug", "cat", "cup", "dog", "ear", "egg", "fox", "fun", "gem", "hat", "ice", "jam", "key", "map",
+    "run", "fast", "jump", "moon", "net", "owl", "pen", "pig", "rain", "red", "sea", "sky", "star", "sun", "tea", "toy", "van", "wave", "web", "win",
+    "mouse", "speed", "quick", "light", "storm", "blaze", "apple", "beach", "brain", "bread", "brick", "candy", "chair", "cloud", "dance", "dream", "eagle", "earth", "field", "flame",
+    "fruit", "ghost", "glass", "grape", "green", "heart", "honey", "horse", "house", "juice", "lemon", "magic", "money", "music", "night", "ocean", "paint", "paper", "peace", "piano",
+    "pizza", "plant", "power", "queen", "river", "robot", "smile", "snake", "sound", "space", "stone", "sugar", "table", "tiger", "train", "water", "whale", "world", "zebra", "planet",
+    "rocket", "shadow", "energy", "galaxy", "mystery", "victory", "crystal", "phantom", "horizon", "thunder", "keyboard", "velocity", "champion", "mountain", "mushroom", "notebook", "rainbow", "sandwich", "treasure", "umbrella",
+    "airplane", "birthday", "butterfly", "chocolate", "computer", "dinosaur", "elephant", "elevator", "fantastic", "firework", "incredible", "knowledge", "laboratory", "lightning", "adventure", "pineapple", "programmer", "strawberry", "sunflower", "technology",
+    "telephone", "telescope", "tornado", "universe", "vacation", "waterfall", "wonderful", "spectacular", "acceleration", "extraordinary", "impossible", "particle", "combo", "score", "pixel", "turbo", "dragon", "snow", "wind", "gold",
+  ],
+  es: [
+    "sol", "luz", "mar", "pan", "sal", "oro", "uva", "isla", "vaca", "lobo", "gato", "hoja", "miel", "mesa", "cama", "casa", "flor", "faro", "nube", "vida",
+    "rojo", "mano", "aire", "agua", "alto", "azul", "cielo", "calle", "campo", "carta", "clase", "coche", "color", "dedo", "dulce", "globo", "hielo", "juego", "leche", "libro",
+    "luna", "lluvia", "magia", "mundo", "noche", "nieve", "risa", "salto", "selva", "sueño", "tigre", "torre", "tren", "valle", "verde", "viaje", "playa", "plaza", "perro", "piedra",
+    "amigo", "árbol", "arena", "baile", "barco", "bosque", "brazo", "camino", "ciudad", "comida", "cuento", "diente", "espada", "espejo", "fiesta", "fresa", "fruta", "gente", "helado", "jardín",
+    "limón", "madera", "manzana", "mañana", "momento", "montaña", "música", "naranja", "país", "pájaro", "palabra", "papel", "planta", "pueblo", "puerta", "queso", "regalo", "reina", "reloj", "sombra",
+    "sonrisa", "tiempo", "tierra", "ventana", "verano", "zapato", "ratón", "rápido", "teclado", "estrella", "velocidad", "relámpago", "ordenador", "campeón", "misterio", "aventura", "galaxia", "dragón", "tormenta", "cristal",
+    "fantasma", "horizonte", "victoria", "energía", "biblioteca", "chocolate", "dinosaurio", "elefante", "escalera", "fantástico", "increíble", "mariposa", "maravilloso", "murciélago", "paraguas", "primavera", "tecnología", "teléfono", "terremoto", "universidad",
+    "imposible", "extraordinario", "aceleración", "guitarra", "familia", "escuela", "trueno", "cometa", "fuego", "viento", "turbo", "neón", "píxel", "río", "oso", "año", "mono", "lago", "cera", "duna",
+  ],
+  de: [
+    "rot", "eis", "zug", "see", "arm", "ohr", "tag", "tor", "hut", "mut", "wal", "reh", "gras", "gold", "hand", "maus", "wind", "held", "haus", "herz",
+    "stern", "blitz", "sturm", "sieg", "licht", "feuer", "apfel", "auge", "auto", "ball", "baum", "berg", "bild", "blume", "boot", "brot", "buch", "burg", "dach", "dorf",
+    "ente", "erde", "fisch", "fluss", "frosch", "fuchs", "geist", "himmel", "holz", "honig", "hund", "insel", "katze", "kette", "kind", "klang", "kopf", "kraft", "krone", "kuchen",
+    "lampe", "land", "leben", "lied", "luft", "mond", "meer", "milch", "musik", "nacht", "nase", "nebel", "pferd", "pilz", "platz", "quelle", "regen", "reise", "ritter", "rose",
+    "sand", "schiff", "schnee", "schule", "sommer", "sonne", "spiegel", "spiel", "stadt", "strand", "tanz", "tiger", "tisch", "traum", "turm", "vogel", "wald", "wasser", "welle", "welt",
+    "wiese", "winter", "wolke", "wunder", "zauber", "zeit", "zahl", "korb", "garten", "morgen", "planet", "rakete", "drache", "schnell", "donner", "energie", "meister", "kristall", "schatten", "tastatur",
+    "gebirge", "gewitter", "fahrrad", "zukunft", "abenteuer", "bibliothek", "computer", "dinosaurier", "elefant", "geheimnis", "regenbogen", "schlange", "schmetterling", "schokolade", "technologie", "telefon", "universum", "wasserfall", "wissenschaft", "unglaublich",
+    "blitzschnell", "geschwindigkeit", "meisterschaft", "herausforderung", "turbo", "neon", "pixel", "galaxie", "komet", "strasse",
+  ],
   ja: [
     { k: "ねこ", r: "neko" }, { k: "いぬ", r: "inu" }, { k: "そら", r: "sora" }, { k: "うみ", r: "umi" },
-    { k: "やま", r: "yama" }, { k: "ほし", r: "hoshi" }, { k: "ひかり", r: "hikari" }, { k: "かみなり", r: "kaminari" },
-    { k: "たつまき", r: "tatsumaki" }, { k: "でんき", r: "denki" }, { k: "はやい", r: "hayai" }, { k: "つよい", r: "tsuyoi" },
-    { k: "さくら", r: "sakura" }, { k: "にんじゃ", r: "ninja" }, { k: "さむらい", r: "samurai" }, { k: "かいぞく", r: "kaizoku" },
-    { k: "ドラゴン", r: "doragon" }, { k: "ロケット", r: "roketto" }, { k: "エネルギー", r: "enerugii" }, { k: "チャンピオン", r: "chanpion" },
-    { k: "スピード", r: "supiido" }, { k: "コンボ", r: "konbo" }, { k: "ぼうけん", r: "bouken" }, { k: "きせき", r: "kiseki" },
-    { k: "ゆうしょう", r: "yuushou" }, { k: "まほう", r: "mahou" }, { k: "ふしぎ", r: "fushigi" }, { k: "すばらしい", r: "subarashii" },
-    { k: "ありがとう", r: "arigatou" }, { k: "いなずま", r: "inazuma" },
+    { k: "やま", r: "yama" }, { k: "ほし", r: "hoshi" }, { k: "とり", r: "tori" }, { k: "はな", r: "hana" },
+    { k: "みず", r: "mizu" }, { k: "ゆき", r: "yuki" }, { k: "かぜ", r: "kaze" }, { k: "あめ", r: "ame" },
+    { k: "くも", r: "kumo" }, { k: "つき", r: "tsuki" }, { k: "もり", r: "mori" }, { k: "かわ", r: "kawa" },
+    { k: "しま", r: "shima" }, { k: "ゆめ", r: "yume" }, { k: "しろ", r: "shiro" }, { k: "おちゃ", r: "ocha" },
+    { k: "すし", r: "sushi" }, { k: "かたな", r: "katana" }, { k: "さかな", r: "sakana" }, { k: "やさい", r: "yasai" },
+    { k: "ひかり", r: "hikari" }, { k: "こころ", r: "kokoro" }, { k: "ごはん", r: "gohan" }, { k: "はなび", r: "hanabi" },
+    { k: "まつり", r: "matsuri" }, { k: "こおり", r: "koori" }, { k: "えいが", r: "eiga" }, { k: "みらい", r: "mirai" },
+    { k: "かがく", r: "kagaku" }, { k: "れきし", r: "rekishi" }, { k: "おんせん", r: "onsen" }, { k: "おかし", r: "okashi" },
+    { k: "かみなり", r: "kaminari" }, { k: "たつまき", r: "tatsumaki" }, { k: "でんき", r: "denki" }, { k: "はやい", r: "hayai" },
+    { k: "つよい", r: "tsuyoi" }, { k: "さくら", r: "sakura" }, { k: "にんじゃ", r: "ninja" }, { k: "さむらい", r: "samurai" },
+    { k: "かいぞく", r: "kaizoku" }, { k: "きつね", r: "kitsune" }, { k: "うさぎ", r: "usagi" }, { k: "たいよう", r: "taiyou" },
+    { k: "おりがみ", r: "origami" }, { k: "からて", r: "karate" }, { k: "かぶき", r: "kabuki" }, { k: "やまびこ", r: "yamabiko" },
+    { k: "ともだち", r: "tomodachi" }, { k: "がっこう", r: "gakkou" }, { k: "せんせい", r: "sensei" }, { k: "おんがく", r: "ongaku" },
+    { k: "ひこうき", r: "hikouki" }, { k: "でんしゃ", r: "densha" }, { k: "じてんしゃ", r: "jitensha" }, { k: "としょかん", r: "toshokan" },
+    { k: "ちきゅう", r: "chikyuu" }, { k: "うちゅう", r: "uchuu" }, { k: "たからもの", r: "takaramono" }, { k: "ドラゴン", r: "doragon" },
+    { k: "ロケット", r: "roketto" }, { k: "エネルギー", r: "enerugii" }, { k: "チャンピオン", r: "chanpion" }, { k: "スピード", r: "supiido" },
+    { k: "コンボ", r: "konbo" }, { k: "ぼうけん", r: "bouken" }, { k: "きせき", r: "kiseki" }, { k: "ゆうしょう", r: "yuushou" },
+    { k: "まほう", r: "mahou" }, { k: "ふしぎ", r: "fushigi" }, { k: "すばらしい", r: "subarashii" }, { k: "ありがとう", r: "arigatou" },
+    { k: "いなずま", r: "inazuma" }, { k: "おめでとう", r: "omedetou" }, { k: "がんばって", r: "ganbatte" }, { k: "いただきます", r: "itadakimasu" },
   ],
 };
 
@@ -100,7 +148,7 @@ const I18N = {
     subtitle: "Vitesse · Précision · Réflexes",
     play: "Jouer", modes: "Modes", difficulty: "Difficulté", skins: "Skins", maps: "Maps",
     stats: "Statistiques", settings: "Paramètres", back: "Retour",
-    mode_fj: "Mode F / J", mode_fj_d: "Alterne F et J le plus vite possible !",
+    mode_fj: "Mode F / J", mode_fj_d: "Appuie sur la touche qui s'allume — F ou J !",
     mode_words: "Mode Mots", mode_words_d: "Tape les mots qui apparaissent.",
     mode_aim: "Mode Souris", mode_aim_d: "Clique les cibles avant qu'elles disparaissent.",
     word_lang: "Langue des mots :",
@@ -118,7 +166,7 @@ const I18N = {
     r_title: "Résultats", r_new: "Nouveau record !", r_replay: "Rejouer", r_menu: "Menu",
     r_score: "Score final", r_maxcombo: "Combo max", r_hits: "Réussites", r_errors: "Erreurs",
     r_acc: "Précision", r_words: "Mots tapés", r_react: "Réaction moy.", r_record: "Record",
-    h_fj: "Appuie sur F puis J en alternance, le plus vite possible !",
+    h_fj: "Appuie sur la touche allumée (F ou J) le plus vite possible !",
     h_words: "Tape le mot affiché — les accents sont facultatifs.",
     h_aim: "Clique sur les cibles avant qu'elles ne rétrécissent !",
     go: "GO !", lvl_up: "NIVEAU",
@@ -127,7 +175,7 @@ const I18N = {
     subtitle: "Speed · Accuracy · Reflexes",
     play: "Play", modes: "Modes", difficulty: "Difficulty", skins: "Skins", maps: "Maps",
     stats: "Statistics", settings: "Settings", back: "Back",
-    mode_fj: "F / J Mode", mode_fj_d: "Alternate F and J as fast as you can!",
+    mode_fj: "F / J Mode", mode_fj_d: "Press whichever key lights up — F or J!",
     mode_words: "Words Mode", mode_words_d: "Type the words that appear.",
     mode_aim: "Mouse Mode", mode_aim_d: "Click the targets before they vanish.",
     word_lang: "Word language:",
@@ -145,7 +193,7 @@ const I18N = {
     r_title: "Results", r_new: "New record!", r_replay: "Replay", r_menu: "Menu",
     r_score: "Final score", r_maxcombo: "Max combo", r_hits: "Hits", r_errors: "Errors",
     r_acc: "Accuracy", r_words: "Words typed", r_react: "Avg reaction", r_record: "Best",
-    h_fj: "Press F then J alternately, as fast as you can!",
+    h_fj: "Press the highlighted key (F or J) as fast as you can!",
     h_words: "Type the displayed word — accents are optional.",
     h_aim: "Click the targets before they shrink away!",
     go: "GO!", lvl_up: "LEVEL",
@@ -154,7 +202,7 @@ const I18N = {
     subtitle: "Velocidad · Precisión · Reflejos",
     play: "Jugar", modes: "Modos", difficulty: "Dificultad", skins: "Skins", maps: "Mapas",
     stats: "Estadísticas", settings: "Ajustes", back: "Volver",
-    mode_fj: "Modo F / J", mode_fj_d: "¡Alterna F y J lo más rápido posible!",
+    mode_fj: "Modo F / J", mode_fj_d: "¡Pulsa la tecla que se ilumina — F o J!",
     mode_words: "Modo Palabras", mode_words_d: "Escribe las palabras que aparecen.",
     mode_aim: "Modo Ratón", mode_aim_d: "Haz clic en los objetivos antes de que desaparezcan.",
     word_lang: "Idioma de las palabras:",
@@ -172,7 +220,7 @@ const I18N = {
     r_title: "Resultados", r_new: "¡Nuevo récord!", r_replay: "Repetir", r_menu: "Menú",
     r_score: "Puntuación final", r_maxcombo: "Combo máx", r_hits: "Aciertos", r_errors: "Errores",
     r_acc: "Precisión", r_words: "Palabras", r_react: "Reacción media", r_record: "Récord",
-    h_fj: "¡Pulsa F y luego J alternando, lo más rápido posible!",
+    h_fj: "¡Pulsa la tecla iluminada (F o J) lo más rápido posible!",
     h_words: "Escribe la palabra mostrada — los acentos son opcionales.",
     h_aim: "¡Haz clic en los objetivos antes de que se encojan!",
     go: "¡YA!", lvl_up: "NIVEL",
@@ -181,7 +229,7 @@ const I18N = {
     subtitle: "Tempo · Präzision · Reflexe",
     play: "Spielen", modes: "Modi", difficulty: "Schwierigkeit", skins: "Skins", maps: "Karten",
     stats: "Statistiken", settings: "Einstellungen", back: "Zurück",
-    mode_fj: "F / J Modus", mode_fj_d: "Drücke abwechselnd F und J, so schnell du kannst!",
+    mode_fj: "F / J Modus", mode_fj_d: "Drücke die Taste, die aufleuchtet — F oder J!",
     mode_words: "Wörter-Modus", mode_words_d: "Tippe die erscheinenden Wörter.",
     mode_aim: "Maus-Modus", mode_aim_d: "Klicke die Ziele, bevor sie verschwinden.",
     word_lang: "Wortsprache:",
@@ -199,7 +247,7 @@ const I18N = {
     r_title: "Ergebnisse", r_new: "Neuer Rekord!", r_replay: "Nochmal", r_menu: "Menü",
     r_score: "Endpunktzahl", r_maxcombo: "Max. Combo", r_hits: "Treffer", r_errors: "Fehler",
     r_acc: "Genauigkeit", r_words: "Wörter", r_react: "Ø Reaktion", r_record: "Rekord",
-    h_fj: "Drücke abwechselnd F und J, so schnell du kannst!",
+    h_fj: "Drücke die leuchtende Taste (F oder J), so schnell du kannst!",
     h_words: "Tippe das angezeigte Wort — Umlaute sind optional.",
     h_aim: "Klicke die Ziele, bevor sie schrumpfen!",
     go: "LOS!", lvl_up: "LEVEL",
@@ -208,7 +256,7 @@ const I18N = {
     subtitle: "スピード · 精度 · 反射神経",
     play: "プレイ", modes: "モード", difficulty: "難易度", skins: "スキン", maps: "マップ",
     stats: "統計", settings: "設定", back: "戻る",
-    mode_fj: "F / J モード", mode_fj_d: "FとJを交互にできるだけ速く押そう！",
+    mode_fj: "F / J モード", mode_fj_d: "光ったキー（FかJ）を押そう！",
     mode_words: "ワードモード", mode_words_d: "表示される単語を入力しよう。",
     mode_aim: "マウスモード", mode_aim_d: "消える前にターゲットをクリック！",
     word_lang: "単語の言語：",
@@ -226,7 +274,7 @@ const I18N = {
     r_title: "リザルト", r_new: "新記録！", r_replay: "もう一度", r_menu: "メニュー",
     r_score: "最終スコア", r_maxcombo: "最大コンボ", r_hits: "成功", r_errors: "ミス",
     r_acc: "精度", r_words: "入力した単語", r_react: "平均反応", r_record: "記録",
-    h_fj: "FとJを交互に、できるだけ速く押そう！",
+    h_fj: "光っているキー（FかJ）をできるだけ速く押そう！",
     h_words: "表示された単語をローマ字で入力しよう。",
     h_aim: "小さくなる前にターゲットをクリック！",
     go: "GO！", lvl_up: "レベル",
@@ -778,10 +826,27 @@ const Game = {
 /* ---------- Mode F / J ---------- */
 const FJ = {
   expected: "f",
+  runLen: 1,                               // répétitions consécutives de la même touche
   times: [],                               // horodatages des frappes (vitesse glissante)
 
-  setup() { this.expected = "f"; this.times = []; this.syncKeys(); },
+  setup() {
+    this.expected = Math.random() < 0.5 ? "f" : "j";   // première touche aléatoire
+    this.runLen = 1;
+    this.times = [];
+    this.syncKeys();
+  },
   begin() { this.syncKeys(); },
+
+  /* Touche suivante : tirage aléatoire — la séquence varie (f j j f f f j…)
+     au lieu d'une alternance stricte ; jamais plus de 4 fois la même touche */
+  nextKey() {
+    if (this.runLen >= 4 || Math.random() < 0.5) {
+      this.expected = this.expected === "f" ? "j" : "f";
+      this.runLen = 1;
+    } else {
+      this.runLen++;
+    }
+  },
   cleanup() { $$(".key").forEach((k) => k.classList.remove("expected", "pressed", "wrong")); },
   goal() { return Math.round(Game.cfg.goal * Math.pow(1.15, Game.level - 1)); },
 
@@ -813,7 +878,7 @@ const FJ = {
       el.classList.add("pressed");
       setTimeout(() => el.classList.remove("pressed"), 90);
       this.times.push(performance.now());
-      this.expected = this.expected === "f" ? "j" : "f";
+      this.nextKey();
       this.syncKeys();
       AudioFX.hit(Game.combo);
       Game.good(10 * Game.cfg.mult, x, y);
@@ -846,6 +911,7 @@ const Words = {
 
   setup() {
     this.pos = 0; this.correctChars = 0; this.wordsDone = 0; this.lastWord = "";
+    this.bag = null;                       // re-mélange à chaque partie (langue/difficulté à jour)
     $("#word-kana").textContent = "";
     $("#word-letters").innerHTML = "";
   },
@@ -861,15 +927,27 @@ const Words = {
     return min > 0.02 ? (this.correctChars / 5) / min : 0;
   },
 
-  /* choisit un mot adapté à la difficulté et à la langue */
-  next() {
+  /* Remplit un « sac » mélangé (Fisher-Yates) avec tous les mots adaptés
+     à la difficulté : aucun mot ne peut revenir avant que le sac soit vide */
+  refillBag() {
     const [lo, hi] = Game.cfg.len;
     const list = WORDS[save.set.wordLang] || WORDS.fr;
-    const norm = list.map((w) => typeof w === "string" ? { k: "", r: w } : w);
-    let pool = norm.filter((w) => fold(w.r).length >= lo && fold(w.r).length <= hi && w.r !== this.lastWord);
-    if (!pool.length) pool = norm.filter((w) => w.r !== this.lastWord);
-    if (!pool.length) pool = norm;
-    const w = pick(pool);
+    const norm = list.map((w) => (typeof w === "string" ? { k: "", r: w } : w));
+    let pool = norm.filter((w) => fold(w.r).length >= lo && fold(w.r).length <= hi);
+    if (!pool.length) pool = norm.slice();
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    /* le nouveau sac ne doit pas commencer par le mot qui vient d'être tapé */
+    if (pool.length > 1 && pool[0].r === this.lastWord) [pool[0], pool[1]] = [pool[1], pool[0]];
+    this.bag = pool;
+  },
+
+  /* pioche le mot suivant dans le sac */
+  next() {
+    if (!this.bag || !this.bag.length) this.refillBag();
+    const w = this.bag.shift();
     this.lastWord = w.r;
     this.disp = w.k || w.r;                // kana pour le japonais, sinon le mot
     this.word = fold(w.r);                 // cible réellement tapée (sans accents)
@@ -1000,7 +1078,7 @@ const Aim = {
         Game.bad();
         this.spawn();
       } else {
-        tg.el.style.transform = `translate(-50%,-50%) scale(${0.35 + 0.65 * k})`;
+        tg.el.style.transform = `translate(-50%,-50%) scale(${0.5 + 0.5 * k})`;
       }
     }
   },
